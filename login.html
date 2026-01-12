@@ -1,0 +1,47 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Login - GUIDELET</title><link rel="stylesheet" href="styles.css"></head><body>
+<header class="site-header">
+  <div class="brand">GUIDELET</div>
+  <nav>
+    <a href="register.html">Register</a>
+    <a href="login.html">Login</a>
+    <a href="index.html">Home</a>
+    <a href="destinations.html">Destinations</a>
+    <a href="tips.html">Tips</a>
+    <a href="reviews.html">Reviews</a>
+  </nav>
+</header>
+<main class="container"><h2>Login</h2>
+<div class="form">
+  <input id="username" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
+  <button class="btn-primary" onclick="login()">Login</button>
+  <p id="msg"></p>
+</div></main>
+<script>
+function login(){
+  const u=document.getElementById('username').value;
+  const p=document.getElementById('password').value;
+  fetch('http://localhost:5000/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})})
+    .then(r=>r.json())
+    .then(res=>{
+      document.getElementById('msg').textContent = res.message || (res.success? 'Login success':'Login failed');
+      if(res.success) localStorage.setItem('vp_user', JSON.stringify(res.user));
+    });
+}
+</script>
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Login - GUIDELET</title>
+    <meta http-equiv="refresh" content="0;url=register.html">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header"><div class="brand">GUIDELET</div></header>
+    <main class="container">
+      <p>Redirecting to the unified account page… <a href="register.html">Click here if not redirected</a>.</p>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Tips - GUIDELET</title><link rel="stylesheet" href="styles.css"><script src="auth.js"></script><script>enforceAuth();</script></head><body>
+<header class="site-header">
+  <div class="brand">GUIDELET</div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="destinations.html">Destinations</a>
+    <a href="tips.html">Tips</a>
+    <a href="reviews.html">Reviews</a>
+    <span id="user-greeting" class="user-greeting"></span>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </nav>
+</header>
+<main class="container">
+  <section class="hero" style="margin-bottom:18px;">
+    <h1>Travel Tips & Checklist</h1>
+    <p>Practical advice to make your trip safer, smoother and more enjoyable.</p>
+    <div style="margin-top:12px">
+      <button class="btn" id="download-checklist">Download Checklist</button>
+      <button class="btn" id="print-page">Print</button>
+    </div>
+  </section>
+
+  <section class="tip-controls">
+    <input id="tip-search" placeholder="Search tips (e.g., passport, money, safety)" />
+    <select id="tip-category">
+      <option value="">All Categories</option>
+    </select>
+  </section>
+
+  <section id="tips-grid" class="grid" style="margin-top:18px"></section>
+
+  <section style="margin-top:26px;">
+    <h2>Quick Packing Checklist</h2>
+    <ul>
+      <li>Passport / ID + photocopies</li>
+      <li>Travel insurance details</li>
+      <li>Phone + chargers + power adapter</li>
+      <li>Medications + first-aid items</li>
+      <li>Comfort items: headphones, eye mask</li>
+    </ul>
+  </section>
+</main>
+
+<script>
+document.getElementById('user-greeting').textContent = 'Welcome, ' + getUserName();
+
+const TIP_DATA = [
+  { id:1, title:'Keep digital copies of documents', category:'Documents', summary:'Scan passports, visas and insurance and keep copies in cloud storage.', details:'Store encrypted copies in Google Drive/Dropbox and an offline USB. Share emergency contact details with a trusted person.' },
+  { id:2, title:'Pack a small first-aid kit', category:'Health', summary:'Include plasters, antiseptic wipes, painkillers and any prescription medicines.', details:'Also pack motion-sickness tablets if you are prone to it, plus hand sanitizer and insect repellent.' },
+  { id:3, title:'Check local weather and customs', category:'Planning', summary:'Look up the forecast and any cultural norms for dress and behaviour.', details:'Adjust packing for the climate and respect local sensitivities. Register travel advisory alerts from your government if available.' },
+  { id:4, title:'Use a money belt or hidden pouch', category:'Safety', summary:'Keep cash and cards in a concealed pouch to reduce pickpocket risk.', details:'Carry minimal cash daily and split cards between two places. Use RFID-blocking wallets for extra safety.' },
+  { id:5, title:'Book transport in advance for peak season', category:'Planning', summary:'Reserve trains/flights and airport transfers to avoid last-minute price spikes.', details:'Confirm cancellation policies and keep tickets/PNRs handy on your phone.' },
+  { id:6, title:'Stay hydrated and rest well', category:'Health', summary:'Long travel days dehydrate you; drink water and take short breaks.', details:'Avoid heavy meals right before long flights; try to maintain sleep schedule for jet lag.' },
+  { id:7, title:'Keep emergency contacts locally', category:'Safety', summary:'Save embassy, local emergency number and family contact in phone and on paper.', details:'Include your accommodation address for taxi drivers and local SIM details.' }
+];
+
+function renderTips(filterText='',$category=''){
+  const container = document.getElementById('tips-grid');
+  const list = TIP_DATA.filter(t=>{
+    const matchesText = !filterText || (t.title + ' ' + t.summary + ' ' + t.details).toLowerCase().includes(filterText.toLowerCase());
+    const matchesCat = !$category || t.category === $category;
+    return matchesText && matchesCat;
+  });
+  if(!list.length){ container.innerHTML = '<p>No tips match your search.</p>'; return; }
+  container.innerHTML = list.map(t=>`
+    <article class="card tip-card">
+      <div style="display:flex;justify-content:space-between;align-items:start">
+        <h3 style="margin:0">${t.title}</h3>
+        <span class="badge">${t.category}</span>
+      </div>
+      <p class="muted">${t.summary}</p>
+      <details>
+        <summary class="more">Read more</summary>
+        <p>${t.details}</p>
+      </details>
+    </article>
+  `).join('');
+}
+
+function populateCategories(){
+  const sel = document.getElementById('tip-category');
+  const cats = [...new Set(TIP_DATA.map(t=>t.category))];
+  cats.forEach(c=>{
+    const opt = document.createElement('option'); opt.value = c; opt.textContent = c; sel.appendChild(opt);
+  });
+}
+
+document.getElementById('tip-search').addEventListener('input', (e)=> renderTips(e.target.value, document.getElementById('tip-category').value));
+document.getElementById('tip-category').addEventListener('change', (e)=> renderTips(document.getElementById('tip-search').value, e.target.value));
+
+document.getElementById('download-checklist').addEventListener('click', ()=>{
+  const checklist = [
+    'Passport / ID + photocopies',
+    'Travel insurance details',
+    'Phone + chargers + power adapter',
+    'Medications + first-aid items',
+    'Comfort items: headphones, eye mask'
+  ].join('\n- ');
+  const blob = new Blob(["- " + checklist], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'travel-checklist.txt'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+});
+
+document.getElementById('print-page').addEventListener('click', ()=> window.print());
+
+populateCategories();
+renderTips();
+</script>
+</body></html>

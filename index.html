@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>GUIDELET - Professional Travel Agency</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="auth.js"></script>
+  <script>
+    enforceAuth();
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">GUIDELET</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="destinations.html">Destinations</a>
+      <a href="tips.html">Tips</a>
+      <a href="reviews.html">Reviews</a>
+      <span id="user-greeting" class="user-greeting"></span>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Discover curated travel experiences</h1>
+
+      <p class="subtext">
+        Seamless planning, personalised guides, and unforgettable adventures —  
+        all designed to make your journey effortless and inspiring.
+      </p>
+
+      <div class="highlights">
+        <span class="highlight">✓ Expert Suggestions</span>
+        <span class="highlight">✓ Smart Itineraries</span>
+        <span class="highlight">✓ Weather Insights</span>
+      </div>
+
+      <a href="destinations.html" class="btn-hero">Explore Destinations</a>
+  </section>
+
+
+  <footer class="site-footer">
+    © GUIDELET - travel guide<br><br>
+    contact: email@guidelet.com<br>
+  </footer>
+
+  <script>
+    // Populate user greeting
+    document.getElementById('user-greeting').textContent = 'Welcome, ' + getUserName();
+
+    fetch('http://localhost:5000/api/destinations')
+      .then(r => r.json())
+      .then(data => {
+        const container = document.getElementById('featured-list');
+        container.innerHTML = data.slice(0,3).map(d => `
+          <article class="card">
+            <img src="${d.image}" alt="${d.name}">
+            <h3>${d.name}</h3>
+            <p>${d.description}</p>
+          </article>
+        `).join('');
+      })
+      .catch(err => console.error('Could not load destinations', err));
+  </script>
+</body>
+</html>

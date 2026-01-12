@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <title>Account - GUIDELET</title>
+  <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+  <header class="site-header">
+  <div class="brand">GUIDELET</div>
+  <nav>
+  <a href="register.html">Register</a>
+  <a href="register.html">Login</a>
+  <a href="index.html">Home</a>
+  <a href="destinations.html">Destinations</a>
+  <a href="tips.html">Tips</a>
+  <a href="reviews.html">Reviews</a>
+  </nav>
+  </header>
+  <main class="container">
+  <section class="auth-card">
+  <div class="tabs">
+          <button id="tab-register" class="tab active" onclick="showTab('register')">Create Account</button>
+          <button id="tab-login" class="tab" onclick="showTab('login')">Login</button>
+  </div>
+  <div id="register" class="auth-form">
+          <h2>Create your account</h2>
+          <div class="form">
+            <input id="ruser" placeholder="Choose username">
+            <input id="rpass" placeholder="Choose password" type="password">
+            <button class="btn-primary" onclick="doRegister()">Register</button>
+            <p id="rmsg" class="muted"></p>
+          </div>
+  </div>
+  <div id="login" class="auth-form" style="display:none;">
+          <h2>Welcome back</h2>
+          <div class="form">
+            <input id="luser" placeholder="Username">
+            <input id="lpass" type="password" placeholder="Password">
+            <button class="btn-primary" onclick="doLogin()">Login</button>
+            <p id="lmsg" class="muted"></p>
+          </div>
+  </div>
+  </section>
+  </main>
+  <script>
+  function showTab(name){
+  document.getElementById('register').style.display = name === 'register' ? 'block' : 'none';
+  document.getElementById('login').style.display = name === 'login' ? 'block' : 'none';
+  document.getElementById('tab-register').classList.toggle('active', name === 'register');
+  document.getElementById('tab-login').classList.toggle('active', name === 'login');
+  }
+  function doRegister(){
+  const username = document.getElementById('ruser').value.trim();
+  const password = document.getElementById('rpass').value;
+  const msg = document.getElementById('rmsg');
+  msg.textContent = '';
+  if(!username || !password){ msg.textContent = 'Please enter username and password'; return; }
+  fetch('http://localhost:5000/api/register', {
+          method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({username, password})
+  }).then(r=>r.json()).then(j=>{
+          msg.textContent = j.message || j.error || 'Registered';
+          if(!j.error){
+            // after successful registration, switch to login and prefill username
+            setTimeout(()=>{
+              showTab('login');
+              document.getElementById('luser').value = username;
+              document.getElementById('ruser').value = '';
+              document.getElementById('rpass').value = '';
+            }, 800);
+          }
+  }).catch(e=> msg.textContent = 'Registration failed');
+  }
+  function doLogin(){
+  const username = document.getElementById('luser').value.trim();
+  const password = document.getElementById('lpass').value;
+  const msg = document.getElementById('lmsg');
+  msg.textContent = '';
+  if(!username || !password){ msg.textContent = 'Please enter username and password'; return; }
+  fetch('http://localhost:5000/api/login', {
+          method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({username, password})
+  }).then(r=>r.json()).then(res=>{
+          if(res.success){
+            localStorage.setItem('vp_user', JSON.stringify(res.user));
+            // redirect to home after short delay
+            msg.textContent = 'Login successful — redirecting...';
+            setTimeout(()=> location.href = 'index.html', 700);
+          } else {
+            msg.textContent = res.message || 'Login failed';
+          }
+  }).catch(e=> msg.textContent = 'Login failed');
+  }
+  </script>
+  </body>
+</html>
+

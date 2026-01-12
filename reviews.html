@@ -1,0 +1,51 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Reviews - GUIDELET</title><link rel="stylesheet" href="styles.css"><script src="auth.js"></script><script>enforceAuth();</script></head><body>
+<header class="site-header">
+  <div class="brand">GUIDELET</div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="destinations.html">Destinations</a>
+    <a href="tips.html">Tips</a>
+    <a href="reviews.html">Reviews</a>
+    <span id="user-greeting" class="user-greeting"></span>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </nav>
+</header>
+<main class="container"><h2>Reviews</h2>
+
+<div class="form">
+  <input id="rname" placeholder="Your name">
+  <input id="rplace" placeholder="Place (optional)">
+  <input id="rrating" placeholder="Rating (1-5)">
+  <textarea id="rcomment" placeholder="Your review"></textarea>
+  <button class="btn-primary" onclick="submitReview()">Submit Review</button>
+  <p id="rmsg"></p>
+</div>
+
+<section>
+  <h3>All Reviews</h3>
+  <div id="reviews-list" class="grid"></div>
+</section>
+</main>
+
+<script>
+function loadReviews(){
+  fetch('http://localhost:5000/api/reviews').then(r=>r.json()).then(data=>{
+    document.getElementById('reviews-list').innerHTML = data.map(rv => `
+      <article class="card"><strong>${rv.name}</strong> <em>${rv.place||''}</em><p>${rv.comment}</p><small>${new Date(rv.date).toLocaleString()}</small></article>
+    `).join('');
+  });
+}
+function submitReview(){
+  const name=document.getElementById('rname').value;
+  const place=document.getElementById('rplace').value;
+  const rating=parseInt(document.getElementById('rrating').value)||null;
+  const comment=document.getElementById('rcomment').value;
+  fetch('http://localhost:5000/api/reviews',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,place,rating,comment})})
+    .then(r=>r.json()).then(j=>{ document.getElementById('rmsg').textContent = j.message; loadReviews(); });
+}
+
+document.getElementById('user-greeting').textContent = 'Welcome, ' + getUserName();
+loadReviews();
+</script>
+</body></html>

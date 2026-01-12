@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Destinations - GUIDELET</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="auth.js"></script>
+  <script>
+    enforceAuth();
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">GUIDELET</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="destinations.html">Destinations</a>
+      <a href="tips.html">Tips</a>
+      <a href="reviews.html">Reviews</a>
+      <span id="user-greeting" class="user-greeting"></span>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2>All Destinations</h2>
+    <input 
+    type="text" 
+    id="searchInput" 
+    placeholder="Search destinations..." 
+    class="search-bar"
+/>
+    <div id="dest-grid" class="grid"></div>
+  </main>
+
+  <script>
+    let allDestinations = [];
+
+    function displayDestinations(list) {
+      document.getElementById('dest-grid').innerHTML = list.map(d => `
+        <article class="card">
+          <h3>${d.name}</h3>
+          <p>${d.description}</p>
+          <p><a class="btn" href="https://www.google.com/search?q=${encodeURIComponent(d.name+' travel')}" target="_blank">Plan Trip</a></p>
+          <p><a href="#" class="weather-link" onclick="showWeather('${d.name}');return false;">
+            View Weather(Dummy)
+          </a></p>
+          <div id="w-${d.id}"></div>
+        </article>
+      `).join('');
+    }
+
+    document.getElementById('user-greeting').textContent = 'Welcome, ' + getUserName();
+    
+    fetch('http://localhost:5000/api/destinations')
+      .then(r => r.json())
+      .then(data => {
+        allDestinations = data;
+        displayDestinations(data);
+    });
+
+    function showWeather(place){
+      fetch('http://localhost:5000/api/weather/' + encodeURIComponent(place))
+        .then(r=>r.json())
+        .then(w=>{
+          alert(place + ': ' + w.temperature_c + '°C, ' + w.condition);
+        });
+    }
+    
+    document.getElementById("searchInput").addEventListener("input", function () {
+      const query = this.value.toLowerCase();
+      const filtered = allDestinations.filter(d => 
+        d.name.toLowerCase().includes(query) ||
+        d.description.toLowerCase().includes(query)
+      );
+      displayDestinations(filtered);
+    });
+  </script>
+</body>
+</html>

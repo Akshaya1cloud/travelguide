@@ -1,0 +1,69 @@
+[
+  {
+    "id": 1,
+    "name": "Goa",
+    "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
+    "description": "Famous beaches and nightlife."
+  },
+  {
+    "id": 2,
+    "name": "Manali",
+    "image": "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
+    "description": "Snowy mountains and trekking."
+  },
+  {
+    "id": 3,
+    "name": "Kerala",
+    "image": "https://images.unsplash.com/photo-1505576391880-4f1b8d6f9d4a",
+    "description": "Backwaters and houseboats."
+  },
+  {
+    "id": 4,
+    "name": "Jaipur",
+    "image": "https://images.unsplash.com/photo-1549991316-0b62f7d9b15f",
+    "description": "Royal palaces and forts."
+  }
+  ,
+  {
+    "id": 5,
+    "name": "Ladakh",
+    "image": "https://images.unsplash.com/photo-1508264165352-c1b2f48a6b3a",
+    "description": "High-altitude deserts and pristine lakes."
+  },
+  {
+    "id": 6,
+    "name": "Rishikesh",
+    "image": "https://images.unsplash.com/photo-1508898578281-774ac4893aee",
+    "description": "River rafting, yoga and spiritual retreats."
+  },
+  {
+    "id": 7,
+    "name": "Mumbai",
+    "image": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb",
+    "description": "Bustling city life and coastal promenades."
+  },
+  {
+    "id": 8,
+    "name": "Shimla",
+    "image": "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
+    "description": "Hill station with colonial architecture and pine forests."
+  },
+  {
+    "id": 9,
+    "name": "Ooty",
+    "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+    "description": "Tea gardens, scenic toy train rides and cool weather."
+  },
+  {
+    "id": 10,
+    "name": "Darjeeling",
+    "image": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c",
+    "description": "Famous tea estates and Himalayan views."
+  },
+  {
+    "id": 11,
+    "name": "Varanasi",
+    "image": "https://images.unsplash.com/photo-1505765059566-6f3d9a5b5f5c",
+    "description": "Ancient ghats, spiritual rituals and riverfront life."
+  }
+]
