@@ -30,4 +30,21 @@ This project is built using **HTML, CSS, JavaScript** for the frontend and **Nod
 ---
 
 ## 📂 Project Structure
-
+travel_website/
+│
+├── frontend/
+│ ├── index.html
+│ ├── login.html
+│ ├── register.html
+│ ├── destinations.html
+│ ├── reviews.html
+│ ├── tips.html
+│ ├── styles.css
+│ └── auth.js
+│
+├── backend/
+│ ├── server.js
+│ ├── package.json
+│ └── node_modules/
+│
+└── README.md
